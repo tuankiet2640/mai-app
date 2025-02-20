@@ -1,0 +1,35 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-left nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.header-left nav a:hover {
+    color: #007bff;
+}
+
+.logo,
+.user-logo,
+.settings-icon {
+    height: 40px;
+    cursor: pointer;
+}
+
+.header-middle {
+    flex: 1;
+}

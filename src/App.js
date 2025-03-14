@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -9,7 +8,9 @@ function App() {
             <Header />
             <main className="main-content">
                 {/* Main content goes here */}
-                <h1>Welcome to the Service</h1>
+                <h1 className="text-3xl font-bold underline">
+                    Hello world!
+                </h1>            
             </main>
             <Footer />
         </div>

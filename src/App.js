@@ -12,13 +12,15 @@ import {
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Chat from "./components/chat/Chat";
-
+import ErrorBoundary from './components/error/ErrorBoundary';
 
 const Layout = () => {
     return (
         <div>
             <Header/>
-            <Chat />
+            <ErrorBoundary>
+                <Chat />
+            </ErrorBoundary>
             <Footer/>
         </div>
     );

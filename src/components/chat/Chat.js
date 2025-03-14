@@ -25,21 +25,26 @@ const Chat = () => {
     };
 
     return (
-        <div className="chat-container">
-            <div className="messages">
+        <div className="flex flex-col h-full p-4 bg-gray-100">
+            <div className="flex-1 overflow-y-auto mb-4">
                 {messages.map((msg, index) => (
-                    <div key={index} className="message">
+                    <div key={index} className="p-2 mb-2 bg-white rounded shadow">
                         {msg}
                     </div>
                 ))}
             </div>
-            <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-            />
-            <button onClick={sendMessage}>Send</button>
+            <div className="flex">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    className="flex-1 p-2 border rounded"
+                />
+                <button onClick={sendMessage} className="ml-2 p-2 bg-blue-500 text-white rounded">
+                    Send
+                </button>
+            </div>
         </div>
     );
 };

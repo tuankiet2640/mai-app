@@ -1,4 +1,5 @@
 import './App.css';
+import ChatPage from './components/chat/ChatWindow';
 
 import {
     createBrowserRouter,
@@ -11,19 +12,15 @@ import {
 
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
-import ChatContainer from "./components/chat/Chat";
-import ErrorBoundary from './components/error/ErrorBoundary';
 import About from './components/header/About';
 
 const Layout = () => {
     return (
         <div>
             <Header/>
-            <ErrorBoundary>
-            <div className="flex-1 flex justify-center items-center ">
-                    <ChatContainer />
-                </div>
-            </ErrorBoundary>
+            <main>
+                <Outlet/>
+            </main>
             <Footer/>
         </div>
     );
@@ -34,6 +31,7 @@ const router = createBrowserRouter(
         <Route>
             <Route path="/" element={<Layout/>}>
                 <Route path="/about" element={<About/>}></Route>
+                <Route path="/chat" element={<ChatPage/>}></Route>
             </Route>
         </Route>
     ),

@@ -10,6 +10,7 @@ export default function ChatPage() {
         setMessages([...messages, newMessage]);
         console.log("world hello");
     };
+
     return (
         <div className="flex h-screen bg-gray-50">
             <Sidebar />

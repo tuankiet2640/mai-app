@@ -15,14 +15,18 @@ export default function ChatWindow({ messages, sendMessage }) {
         { role: "assistant", content: "Thanks for sharing your code. It looks like the issue might be related to how the messages array is being handled. Let's go through it step by step and see if we can find a solution.", timestamp: Date.now() }
     ];
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 pb-24">
-                {messages.map((message, index) => (
-                    <Message key={index} message={message} />
-                ))}
+        <div className="flex flex-col h-full relative">
+            <div className="flex-1 overflow-y-auto space-y-6 bg-gray-50">
+                <div className="p-4 pb-36">
+                    {messages.map((message, index) => (
+                        <Message key={index} message={message} />
+                    ))}
+                </div>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-white">
-                <InputArea sendMessage={sendMessage} />
+            <div className="fixed bottom-0 left-0 right-0 w-[calc(100%-260px)] ml-auto bg-white border-t shadow-md">
+                <div className="pt-2">
+                    <InputArea sendMessage={sendMessage} />
+                </div>
             </div>
         </div>
     );

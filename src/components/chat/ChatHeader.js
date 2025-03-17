@@ -1,4 +1,4 @@
-export default function Header() {
+export default function ChatHeader() {
     return (
         <header className="bg-white border-b p-4">
             <div className="flex items-center justify-between"> <h1 className="text-xl font-bold text-gray-800">AI Chat Assistant</h1>

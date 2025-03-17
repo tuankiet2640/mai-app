@@ -1,5 +1,6 @@
 import './App.css';
 import ChatPage from './components/chat/ChatPage';
+import { ThemeProvider } from './utils/ThemeContext';
 
 import {
     createBrowserRouter,
@@ -39,10 +40,11 @@ const router = createBrowserRouter(
 
 function App() {
     return (
-        <div className="font-bodyFont h-screen">
-            <RouterProvider router={router}/>
-        </div>
+        <ThemeProvider>
+            <div className="font-bodyFont h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+                <RouterProvider router={router}/>
+            </div>
+        </ThemeProvider>
     );
 }
-
 export default App;

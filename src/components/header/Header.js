@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../assets/css/Header.css'
+import ThemeToggle from '../common/ThemeToggle';
 
 const Header = () => {
     return (
@@ -20,6 +21,7 @@ const Header = () => {
             <div className="header-right">
                 <img src="/assets/user-logo.png" alt="User Logo" className="user-logo" />
                 <img src="/assets/settings-icon.png" alt="Settings" className="settings-icon" />
+                <ThemeToggle />        
             </div>
         </header>
     );

@@ -16,15 +16,15 @@ export default function ChatWindow({ messages, sendMessage }) {
     ];
     return (
         <div className="flex flex-col h-full relative">
-            <div className="flex-1 overflow-y-auto space-y-6 bg-gray-50">
+            <div className="flex-1 overflow-y-auto space-y-6 bg-gray-50 dark:bg-gray-800">
                 <div className="p-4 pb-36">
                     {messages.map((message, index) => (
                         <Message key={index} message={message} />
                     ))}
                 </div>
             </div>
-            <div className="fixed bottom-0 left-0 right-0 w-[calc(100%-260px)] ml-auto bg-white border-t shadow-md">
-                <div className="pt-2">
+            <div className="fixed bottom-0 left-0 right-0 w-[calc(100%-260px)] ml-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-md">
+                <div>
                     <InputArea sendMessage={sendMessage} />
                 </div>
             </div>

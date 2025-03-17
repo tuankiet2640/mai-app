@@ -1,5 +1,5 @@
 import './App.css';
-import ChatPage from './components/chat/ChatWindow';
+import ChatPage from './components/chat/ChatPage';
 
 import {
     createBrowserRouter,
@@ -16,9 +16,9 @@ import About from './components/header/About';
 
 const Layout = () => {
     return (
-        <div>
+        <div className="flex flex-col h-screen">
             <Header/>
-            <main>
+            <main className="flex-1 overflow-hidden">
                 <Outlet/>
             </main>
             {/* <Footer/> */}
@@ -39,11 +39,10 @@ const router = createBrowserRouter(
 
 function App() {
     return (
-        <div className="font-bodyFont">
+        <div className="font-bodyFont h-screen">
             <RouterProvider router={router}/>
         </div>
     );
 }
-
 
 export default App;

@@ -12,9 +12,9 @@ export default function ChatPage() {
     };
 
     return (
-        <div className="flex h-screen bg-gray-50">
+        <div className="flex h-full">
             <Sidebar />
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col relative">
                 <Header />
                 <ChatWindow messages={messages} sendMessage={sendMessage} />
             </div>

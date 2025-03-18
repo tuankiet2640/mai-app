@@ -1,33 +1,37 @@
 import Message from './Message';
 import InputArea from './InputArea';
+import { useEffect } from 'react';
 
-
-
-export default function ChatWindow({ messages, sendMessage }) {
-    messages = [
-        { role: "user", content: "Hello, how are you? I hope you're having a great day! I wanted to ask you about something that's been on my mind lately.", timestamp: Date.now() },
-        { role: "assistant", content: "I'm good, thanks! How can I help you today? Feel free to ask me anything, and I'll do my best to assist you with whatever you need.", timestamp: Date.now() },
-        { role: "user", content: "Can you help me with my code? I'm working on a project and I've run into a few issues that I can't seem to figure out on my own. Any help would be greatly appreciated!", timestamp: Date.now() },
-        { role: "assistant", content: "Of course! What do you need help with? Please provide me with some details about the issues you're facing, and I'll do my best to guide you through them.", timestamp: Date.now() },
-        { role: "user", content: "Well, I'm trying to implement a chat window in my application, and I keep getting a TypeError. I'm not sure what's causing it, and it's been quite frustrating. Any ideas on how to fix it?", timestamp: Date.now() },
-        { role: "assistant", content: "Let's take a look at your code and see if we can identify the problem. It might be something simple that we can fix quickly. Please share the relevant parts of your code with me.", timestamp: Date.now() },
-        { role: "user", content: "Sure, here's the code for my ChatWindow component. I've been trying to figure out why the messages aren't displaying correctly, and I keep getting an error related to the 'map' function.", timestamp: Date.now() },
-        { role: "assistant", content: "Thanks for sharing your code. It looks like the issue might be related to how the messages array is being handled. Let's go through it step by step and see if we can find a solution.", timestamp: Date.now() }
-    ];
+export default function ChatWindow({ messages, isTyping, messagesEndRef }) {
+    // If this is used for demo purposes and you need to clear the hardcoded messages
+    // messages = messages || [];
+    
     return (
-        <div className="flex flex-col h-full relative">
-            <div className="flex-1 overflow-y-auto space-y-6 bg-gray-50 dark:bg-gray-800">
-                <div className="p-4 pb-36">
-                    {messages.map((message, index) => (
-                        <Message key={index} message={message} />
-                    ))}
+        <div className="space-y-6">
+            {messages.map((message, index) => (
+                <Message key={index} message={message} />
+            ))}
+            
+            {isTyping && (
+                <div className="py-4 px-6 rounded-lg bg-gray-50 dark:bg-gray-800 max-w-2xl mx-auto">
+                    <div className="flex items-center">
+                        <div className="mr-4 flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30">
+                            <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                        <div className="text-gray-500 dark:text-gray-400">
+                            <div className="flex space-x-2">
+                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-pulse"></div>
+                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-pulse delay-150"></div>
+                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-pulse delay-300"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="fixed bottom-0 left-0 right-0 w-[calc(100%-260px)] ml-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-md">
-                <div>
-                    <InputArea sendMessage={sendMessage} />
-                </div>
-            </div>
+            )}
+            
+            <div ref={messagesEndRef} />
         </div>
     );
 }

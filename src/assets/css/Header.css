@@ -33,3 +33,33 @@
 .header-middle {
     flex: 1;
 }
+
+/* Add styles for header elements */
+
+/* Dropdown container */
+.dropdown-container {
+    position: relative;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Animation for dropdown */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu {
+    animation: fadeIn 0.2s ease-out;
+}

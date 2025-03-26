@@ -266,7 +266,7 @@ const Header = () => {
                                             {dropdownMenus.account.map((item) => (
                                                 item.action ? (
                                                     <button
-                                                        key={item.label}
+                                                        key={item.action}
                                                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-700 dark:hover:text-rose-300"
                                                         role="menuitem"
                                                         onClick={() => handleAccountAction(item)}
@@ -285,6 +285,17 @@ const Header = () => {
                                                     </Link>
                                                 )
                                             ))}
+                                            {/* Add Admin Dashboard Link (only for admin users) */}
+                                            {user?.isAdmin && (
+                                                <Link
+                                                    to="/admin/dashboard"
+                                                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-700 dark:hover:text-rose-300 border-t border-gray-100 dark:border-gray-700 mt-1 pt-1"
+                                                    role="menuitem"
+                                                    onClick={() => setActiveDropdown(null)}
+                                                >
+                                                    Admin Dashboard
+                                                </Link>
+                                            )}
                                         </div>
                                     </>
                                 )}
@@ -298,6 +309,9 @@ const Header = () => {
                             </Link>
                             <Link to="/signin" className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                 Sign up
+                            </Link>
+                            <Link to="/admin/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                                Admin
                             </Link>
                         </div>
                     )}

@@ -41,6 +41,15 @@ import ServicesChat from './components/services/ServicesChat';
 import ServicesCode from './components/services/ServicesCode';
 import ServicesImages from './components/services/ServicesImages';
 
+// Import admin pages
+import AdminLayout from './components/admin/AdminLayout';
+import AdminDashboard from './components/admin/AdminDashboard';
+import AdminLogin from './components/admin/AdminLogin';
+import UsersPage from './components/admin/UsersPage';
+import AgentsPage from './components/admin/AgentsPage';
+import ServicesPage from './components/admin/ServicesPage';
+import SettingsPage from './components/admin/SettingsPage';
+
 const Layout = () => {
     return (
         <div className="flex flex-col h-screen">
@@ -82,6 +91,18 @@ const router = createBrowserRouter(
                 <Route path="/services/chat" element={<ServicesChat />} />
                 <Route path="/services/code" element={<ServicesCode />} />
                 <Route path="/services/images" element={<ServicesImages />} />
+                
+                {/* Admin routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="users" element={<UsersPage />} />
+                    <Route path="agents" element={<AgentsPage />} />
+                    <Route path="services" element={<ServicesPage />} />
+                    <Route path="tokens" element={<SettingsPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                </Route>
             </Route>
         </Route>
     ),

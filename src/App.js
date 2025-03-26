@@ -33,6 +33,7 @@ import AgentsHome from './components/agents/AgentsHome';
 import AgentsClaude from './components/agents/AgentsClaude';
 import AgentsGPT from './components/agents/AgentsGPT';
 import AgentsCustom from './components/agents/AgentsCustom';
+import Minion from './components/agents/Minion';
 
 // Import services pages
 import ServicesHome from './components/services/ServicesHome';
@@ -74,6 +75,7 @@ const router = createBrowserRouter(
                 <Route path="/agents/claude" element={<AgentsClaude />} />
                 <Route path="/agents/gpt" element={<AgentsGPT />} />
                 <Route path="/agents/custom" element={<AgentsCustom />} />
+                <Route path="/agents/minion" element={<Minion />} />
                 
                 {/* Services routes */}
                 <Route path="/services" element={<ServicesHome />} />

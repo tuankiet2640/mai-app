@@ -22,7 +22,8 @@ const Header = () => {
             { label: 'Agents Home', path: '/agents' },
             { label: 'Claude', path: '/agents/claude' },
             { label: 'GPT', path: '/agents/gpt' },
-            { label: 'Custom Agents', path: '/agents/custom' }
+            { label: 'Custom Agents', path: '/agents/custom' },
+            { label: 'Minion', path: '/agents/minion' }
         ],
         services: [
             { label: 'Services Home', path: '/services' },

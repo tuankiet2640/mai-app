@@ -73,9 +73,9 @@ const Header = () => {
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex items-center space-x-4">
                         <Link to="/" className="flex items-center space-x-2">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-purple-600 flex items-center justify-center shadow-lg">
+                            {/* <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-purple-600 flex items-center justify-center shadow-lg">
                                 <span className="text-xl font-bold text-white tracking-tight">M</span>
-                            </div>
+                            </div> */}
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600">MAI</span>
                         </Link>
 

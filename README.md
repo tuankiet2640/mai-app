@@ -9,6 +9,10 @@ A modern chat application built with React and Tailwind CSS, featuring a respons
 - **Styling**: TailwindCSS
 - **Routing**: React Router v6
 - **Theme Management**: Context API
+- **Recharts**: For data visualization and charts.
+- **Axios**: For HTTP requests.
+- **Socket.IO Client**: For real-time communication.
+- **Date-fns**: For date manipulation.
 
 ## Features
 
@@ -18,7 +22,7 @@ A modern chat application built with React and Tailwind CSS, featuring a respons
 - 🎨 Modern UI with TailwindCSS
 - 🛣️ Route-based navigation
 - ♿ Accessibility support
-
+- 🤯 Charts and Visualization with recharts
 ## Getting Started
 
 1. Clone the repository:

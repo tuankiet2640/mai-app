@@ -131,7 +131,82 @@ const LearningTech = () => {
           <p>
             Our RAG service is built with a flexible, modular architecture that allows for easy customization and expansion:
           </p>
-              
+
+          {/* Add new Frontend Architecture section here */}
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 my-8">
+            <h3 className="flex items-center text-xl font-semibold mb-6">
+              <span className="text-2xl mr-3">🎨</span> Frontend Architecture
+            </h3>
+
+            <div className="space-y-6">
+              <div>
+                <h4 className="flex items-center text-lg font-medium mb-3">
+                  <span className="text-xl mr-2">📁</span> Core Structure
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-rose-500">⚛️</span>
+                    <span><strong>React 18</strong> - Modern UI with hooks</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-blue-500">📘</span>
+                    <span><strong>TypeScript</strong> - Type-safe development</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-purple-500">🔀</span>
+                    <span><strong>React Router v6</strong> - Client routing</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-green-500">📊</span>
+                    <span><strong>Redux Toolkit</strong> - State management</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="flex items-center text-lg font-medium mb-3">
+                  <span className="text-xl mr-2">🎯</span> Key Features
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-indigo-500">💾</span>
+                    <span><strong>State Management</strong> - Redux + Context API</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-amber-500">🎨</span>
+                    <span><strong>Design System</strong> - TailwindCSS + Dark mode</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-cyan-500">🔌</span>
+                    <span><strong>API Integration</strong> - Axios + Socket.IO</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-emerald-500">⚡</span>
+                    <span><strong>Performance</strong> - Code splitting + Lazy loading</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="flex items-center text-lg font-medium mb-3">
+                  <span className="text-xl mr-2">📂</span> Folder Structure
+                </h4>
+                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg font-mono text-sm">
+                  <pre className="text-gray-700 dark:text-gray-300">
+                  {`src/
+├── 📁 components/    # Reusable UI components
+├── 📁 features/      # Feature-specific logic
+├── 🎣 hooks/         # Custom React hooks
+├── 🔌 services/      # API communication
+├── 📊 store/         # Redux store config
+├── 🎨 styles/        # Global styles
+└── 🛠️ utils/         # Helper functions`}
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
           <h2 className="flex items-center">
             <span className="text-2xl mr-3">🛠️</span> Technologies Used

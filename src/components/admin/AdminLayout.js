@@ -83,6 +83,34 @@ export default function AdminLayout() {
                 </Link>
 
                 <Link
+                  to="/admin/analytics"
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    isActivePath('/admin/analytics')
+                      ? 'bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                  }`}
+                >
+                  <svg
+                    className={`mr-3 h-6 w-6 ${
+                      isActivePath('/admin/analytics')
+                        ? 'text-rose-500 dark:text-rose-400'
+                        : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300'
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                  Analytics
+                </Link>
+
+                <Link
                   to="/admin/users"
                   className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                     isActivePath('/admin/users')
@@ -326,6 +354,35 @@ export default function AdminLayout() {
                   />
                 </svg>
                 Dashboard
+              </Link>
+
+              <Link
+                to="/admin/analytics"
+                className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
+                  isActivePath('/admin/analytics')
+                    ? 'bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                }`}
+                onClick={() => setSidebarOpen(false)}
+              >
+                <svg
+                  className={`mr-4 h-6 w-6 ${
+                    isActivePath('/admin/analytics')
+                      ? 'text-rose-500 dark:text-rose-400'
+                      : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300'
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+                Analytics
               </Link>
 
               <Link

@@ -49,6 +49,7 @@ import UsersPage from './components/admin/UsersPage';
 import AgentsPage from './components/admin/AgentsPage';
 import ServicesPage from './components/admin/ServicesPage';
 import SettingsPage from './components/admin/SettingsPage';
+import AnalyticsDashboard from './components/admin/AnalyticsDashboard';
 
 const Layout = () => {
     return (
@@ -100,6 +101,7 @@ const router = createBrowserRouter(
                     <Route path="users" element={<UsersPage />} />
                     <Route path="agents" element={<AgentsPage />} />
                     <Route path="services" element={<ServicesPage />} />
+                    <Route path="analytics" element={<AnalyticsDashboard />} />
                     <Route path="tokens" element={<SettingsPage />} />
                     <Route path="settings" element={<SettingsPage />} />
                 </Route>

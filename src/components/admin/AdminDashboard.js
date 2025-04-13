@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import adminService from '../../services/adminService';
+import SimpleApiModeToggle from './SimpleApiModeToggle';
 
-// Mock data for the admin dashboard
-const mockStats = {
+// Initial state for dashboard stats
+const initialStats = {
   users: 342,
   agents: 48,
   services: 12,
@@ -169,7 +171,7 @@ const mockStats = {
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F'];
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState(mockStats);
+  const [stats, setStats] = useState(initialStats);
   const [loading, setLoading] = useState(false);
   const [timeRange, setTimeRange] = useState('month');
 
@@ -178,9 +180,16 @@ export default function AdminDashboard() {
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
-        // Simulating API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setStats(mockStats);
+        // Fetch dashboard stats from our admin service
+        const response = await adminService.getDashboardStats();
+        if (response && response.data) {
+          setStats({
+            ...initialStats,
+            ...response.data
+          });
+        } else {
+          setStats(initialStats);
+        }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -207,6 +216,11 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* API Mode Toggle - Only visible in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <SimpleApiModeToggle />
+      )}
+      
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">

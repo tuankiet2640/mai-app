@@ -12,6 +12,9 @@ import * as userMocks from './users';
 import * as adminMocks from './admin';
 import * as agentMocks from './agents';
 import * as chatMocks from './chat';
+import * as knowledgeMocks from './knowledge';
+import * as ragMocks from './rag';
+import * as analyticsMocks from './analytics';
 
 // Export all mock data collections
 export const mockData = {
@@ -19,7 +22,10 @@ export const mockData = {
   users: userMocks,
   admin: adminMocks,
   agents: agentMocks,
-  chat: chatMocks
+  chat: chatMocks,
+  knowledge: knowledgeMocks,
+  rag: ragMocks,
+  analytics: analyticsMocks
 };
 
 /**

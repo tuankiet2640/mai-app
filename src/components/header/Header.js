@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../../assets/css/Header.css';
+import '../../assets/css/CustomScrollbar.css';
+
+
 import ThemeToggle from '../common/ThemeToggle';
 import { useAuth } from '../../utils/AuthContext';
 
 const Header = () => {
     const [activeDropdown, setActiveDropdown] = useState(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileActiveDropdown, setMobileActiveDropdown] = useState(null);
+    const mobileMenuRef = useRef(null);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout, isAuthenticated } = useAuth() || { user: null, isAuthenticated: false };
@@ -67,6 +73,40 @@ const Header = () => {
         }
     };
 
+    // Toggle mobile menu
+    const toggleMobileMenu = () => {
+        setMobileMenuOpen(!mobileMenuOpen);
+        // Close any open mobile dropdowns when toggling the menu
+        setMobileActiveDropdown(null);
+    };
+
+    // Toggle mobile dropdown
+    const toggleMobileDropdown = (dropdown) => {
+        if (mobileActiveDropdown === dropdown) {
+            setMobileActiveDropdown(null);
+        } else {
+            setMobileActiveDropdown(dropdown);
+        }
+    };
+
+    // Close mobile menu when clicking outside
+    useEffect(() => {
+        const handleClickOutsideMobileMenu = (event) => {
+            if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target) && 
+                !event.target.closest('[data-mobile-menu-button]')) {
+                setMobileMenuOpen(false);
+            }
+        };
+
+        if (mobileMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutsideMobileMenu);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsideMobileMenu);
+        };
+    }, [mobileMenuOpen]);
+
     return (
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 relative z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,6 +118,40 @@ const Header = () => {
                             </div> */}
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600">MAI</span>
                         </Link>
+
+                        {/* Mobile menu button */}
+                        <button
+                            type="button"
+                            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                            aria-controls="mobile-menu"
+                            aria-expanded={mobileMenuOpen}
+                            onClick={toggleMobileMenu}
+                            data-mobile-menu-button
+                        >
+                            <span className="sr-only">Open main menu</span>
+                            {/* Icon when menu is closed */}
+                            <svg
+                                className={`${mobileMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            {/* Icon when menu is open */}
+                            <svg
+                                className={`${mobileMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
 
                         <nav className="hidden md:flex items-center space-x-1">
                             <Link 
@@ -313,6 +387,181 @@ const Header = () => {
                             <Link to="/admin/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                                 Admin
                             </Link>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Mobile menu */}
+            <div 
+                className={`md:hidden ${mobileMenuOpen ? 'block' : 'hidden'} fixed inset-0 z-40 bg-gray-900 bg-opacity-50`}
+                aria-hidden="true"
+            ></div>
+            <div
+                id="mobile-menu"
+                ref={mobileMenuRef}
+                className={`md:hidden fixed top-16 left-0 bottom-0 w-64 bg-white dark:bg-gray-800 z-50 transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out overflow-y-auto custom-scrollbar shadow-lg border-r border-gray-200 dark:border-gray-700`}
+            >
+                <div className="px-4 pt-4 pb-6 space-y-4">
+                    {/* Mobile navigation links */}
+                    <Link 
+                        to="/chat" 
+                        className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/chat') ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        Chat
+                    </Link>
+
+                    {/* Mobile Learning dropdown */}
+                    <div>
+                        <button 
+                            className={`flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium ${location.pathname.startsWith('/learning') ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                            onClick={() => toggleMobileDropdown('learning')}
+                        >
+                            Learning
+                            <svg
+                                className={`ml-1 h-5 w-5 transition-transform ${mobileActiveDropdown === 'learning' ? 'transform rotate-180' : ''}`}
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div className={`mt-1 pl-4 ${mobileActiveDropdown === 'learning' ? 'block' : 'hidden'}`}>
+                            {dropdownMenus.learning.map((item) => (
+                                <Link
+                                    key={item.path}
+                                    to={item.path}
+                                    className="block px-3 py-2 rounded-md text-sm text-gray-700 dark:text-gray-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-700 dark:hover:text-rose-300"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Mobile Agents dropdown */}
+                    <div>
+                        <button 
+                            className={`flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium ${location.pathname.startsWith('/agents') ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                            onClick={() => toggleMobileDropdown('agents')}
+                        >
+                            Agents
+                            <svg
+                                className={`ml-1 h-5 w-5 transition-transform ${mobileActiveDropdown === 'agents' ? 'transform rotate-180' : ''}`}
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div className={`mt-1 pl-4 ${mobileActiveDropdown === 'agents' ? 'block' : 'hidden'}`}>
+                            {dropdownMenus.agents.map((item) => (
+                                <Link
+                                    key={item.path}
+                                    to={item.path}
+                                    className="block px-3 py-2 rounded-md text-sm text-gray-700 dark:text-gray-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-700 dark:hover:text-rose-300"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Mobile Services dropdown */}
+                    <div>
+                        <button 
+                            className={`flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium ${location.pathname.startsWith('/services') ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                            onClick={() => toggleMobileDropdown('services')}
+                        >
+                            Services
+                            <svg
+                                className={`ml-1 h-5 w-5 transition-transform ${mobileActiveDropdown === 'services' ? 'transform rotate-180' : ''}`}
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div className={`mt-1 pl-4 ${mobileActiveDropdown === 'services' ? 'block' : 'hidden'}`}>
+                            {dropdownMenus.services.map((item) => (
+                                <Link
+                                    key={item.path}
+                                    to={item.path}
+                                    className="block px-3 py-2 rounded-md text-sm text-gray-700 dark:text-gray-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-700 dark:hover:text-rose-300"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    <Link 
+                        to="/about" 
+                        className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/about') ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        About
+                    </Link>
+
+                    {/* No auth links here as they are already in the header */}
+
+                    {/* Mobile user menu */}
+                    {isAuthenticated && (
+                        <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                            <div className="px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300">
+                                {user?.name || 'User'}
+                                <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                    {user?.accountType || 'Free Account'}
+                                </span>
+                            </div>
+                            {dropdownMenus.account.map((item) => (
+                                item.action ? (
+                                    <button
+                                        key={item.action}
+                                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        onClick={() => {
+                                            handleAccountAction(item);
+                                            setMobileMenuOpen(false);
+                                        }}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ) : (
+                                    <Link
+                                        key={item.path}
+                                        to={item.path}
+                                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                )
+                            ))}
+                            {user?.isAdmin && (
+                                <Link
+                                    to="/admin/dashboard"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-700 mt-1 pt-3"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    Admin Dashboard
+                                </Link>
+                            )}
                         </div>
                     )}
                 </div>

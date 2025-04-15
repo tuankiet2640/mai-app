@@ -8,6 +8,7 @@
 const mockUsers = [
   {
     id: '1',
+    username: 'admin',
     name: 'Admin User',
     email: 'admin@example.com',
     password: 'admin123', // In a real app, passwords would never be stored like this
@@ -19,6 +20,7 @@ const mockUsers = [
   },
   {
     id: '2',
+    username: 'user',
     name: 'Regular User',
     email: 'user@example.com',
     password: 'password123',
@@ -36,16 +38,19 @@ const mockUsers = [
  * @returns {object} Login response with user data and tokens
  */
 export const login = (credentials) => {
-  const { email, password } = credentials;
-  
-  // Find user with matching email
-  const user = mockUsers.find(u => u.email === email);
-  
+  const { username, email, password } = credentials;
+
+  // Find user with matching username or email
+  const user = mockUsers.find(u =>
+    (username && u.username === username) ||
+    (email && u.email === email)
+  );
+
   // Check if user exists and password matches
   if (user && user.password === password) {
     // Create a sanitized user object (without password)
     const { password, ...userWithoutPassword } = user;
-    
+
     return {
       user: userWithoutPassword,
       tokens: {
@@ -54,9 +59,9 @@ export const login = (credentials) => {
       }
     };
   }
-  
+
   // Authentication failed
-  throw new Error('Invalid email or password');
+  throw new Error('Invalid username/email or password');
 };
 
 /**

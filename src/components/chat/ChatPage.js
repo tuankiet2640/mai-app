@@ -25,7 +25,7 @@ export default function ChatPage() {
     // Redirect if not authenticated
     useEffect(() => {
         if (!isAuthenticated) {
-            navigate('/signin');
+            navigate('/login');
         }
     }, [isAuthenticated, navigate]);
 

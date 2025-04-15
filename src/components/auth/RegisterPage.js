@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function RegisterPage() {
+  const [identifier, setIdentifier] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -128,13 +129,13 @@ export default function RegisterPage() {
                 Email address
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
+  id="username"
+  name="username"
+  type="text"
+  autoComplete="username"
+  required
+  value={identifier}
+  onChange={(e) => setIdentifier(e.target.value)}
                 className={`mt-1 appearance-none block w-full px-3 py-2 border ${
                   errors.email ? 'border-red-300 dark:border-red-700' : 'border-gray-300 dark:border-gray-700'
                 } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm`}

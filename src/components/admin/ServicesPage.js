@@ -17,7 +17,7 @@ export default function ServicesPage() {
     { id: 'S1009', name: 'Translation Service', status: 'Operational', requests: 845, avgLatency: 310, errorRate: 0.9, uptime: 99.94, lastIncident: '2023-05-15T13:20:14' },
     { id: 'S1010', name: 'Document Processor', status: 'Operational', requests: 1125, avgLatency: 450, errorRate: 1.3, uptime: 99.93, lastIncident: '2023-06-01T09:30:56' }
   ];
-
+ 
   // Filter and search services
   const filteredServices = services
     .filter(service => {

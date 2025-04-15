@@ -3,6 +3,7 @@ import ChatPage from './components/chat/ChatPage';
 import { ThemeProvider } from './utils/ThemeContext';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './store';
+import LoginPage from './features/auth/LoginPage';
 
 import {
     createBrowserRouter,
@@ -18,7 +19,6 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import About from './components/header/About';
 import HomePage from './components/home/HomePage';
-import SignIn from './components/auth/SignIn';
 import { AuthProvider } from './utils/AuthContext';
 
 // Import learning pages
@@ -44,7 +44,6 @@ import ServicesImages from './components/services/ServicesImages';
 // Import admin pages
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './components/admin/AdminDashboard';
-import AdminLogin from './components/admin/AdminLogin';
 import UsersPage from './components/admin/UsersPage';
 import AgentsPage from './components/admin/AgentsPage';
 import ServicesPage from './components/admin/ServicesPage';
@@ -70,8 +69,8 @@ const router = createBrowserRouter(
                 <Route index element={<HomePage />} />
                 <Route path="/about" element={<About/>} />
                 <Route path="/chat" element={<ChatPage/>} />
-                <Route path="/signin" element={<SignIn/>} />
-                <Route path="/login" element={<Navigate to="/signin" replace />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/admin/login" element={<LoginPage isAdmin />} />
                 
                 {/* Learning routes */}
                 <Route path="/learning" element={<LearningHome />} />
@@ -94,7 +93,6 @@ const router = createBrowserRouter(
                 <Route path="/services/images" element={<ServicesImages />} />
                 
                 {/* Admin routes */}
-                <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<Navigate to="/admin/dashboard" replace />} />
                     <Route path="dashboard" element={<AdminDashboard />} />

@@ -48,7 +48,7 @@ const Header = () => {
     const handleAccountAction = (item) => {
         if (item.action === 'logout') {
             logout();
-            navigate('/signin');
+            navigate('/login');
         }
         setActiveDropdown(null);
     };
@@ -378,11 +378,11 @@ const Header = () => {
                     ) : (
                         <div className="flex items-center space-x-4">
                             <ThemeToggle />
-                            <Link to="/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            {/* <Link to="/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                                 Sign in
-                            </Link>
-                            <Link to="/signin" className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                                Sign up
+                            </Link> */}
+                            <Link to="/login" className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                                Login
                             </Link>
                             <Link to="/admin/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                                 Admin

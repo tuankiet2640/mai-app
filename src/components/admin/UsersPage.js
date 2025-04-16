@@ -1,40 +1,40 @@
 import React, { useState } from 'react';
+import { useGetUsersQuery } from '../../features/api/usersApi';
+import AddUserForm from './AddUserForm';
 
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
+  const [showAddUser, setShowAddUser] = useState(false);
 
-  // Mock users data from the dashboard
-  const users = [
-    { id: 'U1001', name: 'Alice Johnson', email: 'alice@example.com', plan: 'Pro', status: 'Active', tokenUsage: 450000, lastActive: '2023-06-07T14:32:21' },
-    { id: 'U1002', name: 'Bob Smith', email: 'bob@example.com', plan: 'Basic', status: 'Active', tokenUsage: 380500, lastActive: '2023-06-07T09:15:43' },
-    { id: 'U1003', name: 'Carol Davis', email: 'carol@example.com', plan: 'Provip', status: 'Active', tokenUsage: 325800, lastActive: '2023-06-06T18:22:10' },
-    { id: 'U1004', name: 'David Wilson', email: 'david@example.com', plan: 'Bellow Basic', status: 'Inactive', tokenUsage: 290450, lastActive: '2023-06-07T11:45:32' },
-    { id: 'U1005', name: 'Eva Brown', email: 'eva@example.com', plan: 'Pro', status: 'Active', tokenUsage: 275900, lastActive: '2023-06-07T16:08:55' },
-    { id: 'U1006', name: 'Frank Miller', email: 'frank@example.com', plan: 'Basic', status: 'Active', tokenUsage: 243200, lastActive: '2023-06-07T12:30:15' },
-    { id: 'U1007', name: 'Grace Taylor', email: 'grace@example.com', plan: 'Bellow Basic', status: 'Inactive', tokenUsage: 127600, lastActive: '2023-06-05T10:12:08' },
-    { id: 'U1008', name: 'Henry Garcia', email: 'henry@example.com', plan: 'Provip', status: 'Active', tokenUsage: 512700, lastActive: '2023-06-07T14:50:22' },
-    { id: 'U1009', name: 'Ivy Lee', email: 'ivy@example.com', plan: 'Basic', status: 'Active', tokenUsage: 175300, lastActive: '2023-06-07T08:24:43' },
-    { id: 'U1010', name: 'Jack Martin', email: 'jack@example.com', plan: 'Pro', status: 'Active', tokenUsage: 398200, lastActive: '2023-06-06T21:18:36' }
-  ];
+  const { data, isLoading, error, refetch } = useGetUsersQuery();
+  const users = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.users)
+      ? data.users
+      : Array.isArray(data?.data)
+        ? data.data
+        : [];
 
   // Filter and search users
   const filteredUsers = users
     .filter(user => {
       if (filter === 'all') return true;
-      return user.status.toLowerCase() === filter.toLowerCase();
+      return user.status?.toLowerCase() === filter.toLowerCase();
     })
     .filter(user => {
       if (!searchTerm) return true;
       return (
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.id.toLowerCase().includes(searchTerm.toLowerCase())
+        (user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.id && user.id.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     });
 
   const formatDate = (dateString) => {
+    if (!dateString) return '-';
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric', 
       month: 'short', 
@@ -44,7 +44,9 @@ export default function UsersPage() {
     }).format(date);
   };
 
+
   const formatTokenUsage = (tokens) => {
+    if (typeof tokens !== 'number' || isNaN(tokens)) return '0';
     if (tokens >= 1000000) {
       return `${(tokens / 1000000).toFixed(2)}M`;
     } else if (tokens >= 1000) {
@@ -52,6 +54,7 @@ export default function UsersPage() {
     }
     return tokens.toString();
   };
+
 
   const getBadgeColor = (plan) => {
     switch (plan) {
@@ -75,10 +78,34 @@ export default function UsersPage() {
           </p>
         </div>
         <div className="mt-4 md:mt-0">
-          <button className="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors">
+          <button
+            className="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
+            onClick={() => setShowAddUser(true)}
+          >
             Add User
           </button>
         </div>
+        {showAddUser && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 w-full max-w-md relative">
+              <button
+                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                onClick={() => setShowAddUser(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Add New User</h2>
+              <AddUserForm
+                onSuccess={() => {
+                  setShowAddUser(false);
+                  refetch();
+                }}
+                onCancel={() => setShowAddUser(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Filters and Search */}
@@ -148,26 +175,36 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {isLoading && (
+                <div className="text-center py-8">
+                  <span className="text-gray-500 dark:text-gray-300">Loading users...</span>
+                </div>
+              )}
+              {error && (
+                <div className="text-center py-8">
+                  <span className="text-red-500">{error.error || error.toString()}</span>
+                </div>
+              )}
               {filteredUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                        <span className="text-gray-700 dark:text-gray-300 font-medium">{user.name.charAt(0)}</span>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">{(user.name && user.name.charAt(0)) || (user.username && user.username.charAt(0)) || '?'}</span>
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {user.name}
+                          {user.name || user.username || 'Unknown'}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {user.email}
+                          {user.email || 'No email'}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getBadgeColor(user.plan)}`}>
-                      {user.plan}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getBadgeColor(user.plan || 'Unknown')}`}>
+                      {user.plan || 'Unknown'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

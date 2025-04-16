@@ -16,6 +16,9 @@ const Header = () => {
     const navigate = useNavigate();
     const { user, logout, isAuthenticated } = useAuth() || { user: null, isAuthenticated: false };
 
+    // Helper: check if user is admin (role object array)
+    const isAdmin = user?.roles?.some(role => role.name && role.name.toLowerCase() === 'admin');
+
     const dropdownMenus = {
         learning: [
             { label: 'Learning Home', path: '/learning' },
@@ -34,6 +37,7 @@ const Header = () => {
         services: [
             { label: 'Services Home', path: '/services' },
             { label: 'Chat', path: '/services/chat' },
+            { label: 'KB Chat', path: '/services/kbchat' },
             { label: 'Code', path: '/services/code' },
             { label: 'Images', path: '/services/images' }
         ],
@@ -41,14 +45,17 @@ const Header = () => {
             { label: 'Profile', path: '/profile' },
             { label: 'Settings', path: '/settings' },
             { label: 'Billing', path: '/billing' },
+            // Admin Dashboard link will be conditionally rendered below
             { label: 'Logout', action: 'logout' }
         ]
     };
 
     const handleAccountAction = (item) => {
         if (item.action === 'logout') {
-            logout();
-            navigate('/login');
+            (async () => {
+                await logout();
+                navigate('/login');
+            })();
         }
         setActiveDropdown(null);
     };
@@ -359,11 +366,11 @@ const Header = () => {
                                                     </Link>
                                                 )
                                             ))}
-                                            {/* Add Admin Dashboard Link (only for admin users) */}
-                                            {user?.isAdmin && (
+                                            {/* Admin Dashboard link for admins */}
+                                            {isAdmin && (
                                                 <Link
                                                     to="/admin/dashboard"
-                                                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:text-rose-700 dark:hover:text-rose-300 border-t border-gray-100 dark:border-gray-700 mt-1 pt-1"
+                                                    className="block px-4 py-2 text-sm text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-900 dark:hover:text-indigo-200 border-t border-gray-200 dark:border-gray-600 mt-2"
                                                     role="menuitem"
                                                     onClick={() => setActiveDropdown(null)}
                                                 >
@@ -384,9 +391,9 @@ const Header = () => {
                             <Link to="/login" className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                 Login
                             </Link>
-                            <Link to="/admin/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            {/* <Link to="/admin/dashboard" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                                 Admin
-                            </Link>
+                            </Link> */}
                         </div>
                     )}
                 </div>
@@ -525,9 +532,9 @@ const Header = () => {
                     {isAuthenticated && (
                         <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
                             <div className="px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300">
-                                {user?.name || 'User'}
+                                {user?.name || user?.username || 'User'}
                                 <span className="block text-xs text-gray-500 dark:text-gray-400">
-                                    {user?.accountType || 'Free Account'}
+                                    {user?.accountType || user?.roles?.join(', ') || 'Free Account'}
                                 </span>
                             </div>
                             {dropdownMenus.account.map((item) => (
@@ -553,9 +560,9 @@ const Header = () => {
                                     </Link>
                                 )
                             ))}
-                            {user?.isAdmin && (
+                            {isAdmin && (
                                 <Link
-                                    to="/admin/dashboard"
+                                    to="/admin"
                                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-700 mt-1 pt-3"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
@@ -568,6 +575,7 @@ const Header = () => {
             </div>
         </header>
     );
-};
+
+}
 
 export default Header;

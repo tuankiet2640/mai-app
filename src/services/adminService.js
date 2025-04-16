@@ -1,4 +1,4 @@
-import api from './api';
+import { authApi } from '../api/axiosInstance';
 import appConfig from '../config/appConfig';
 
 /**
@@ -48,10 +48,27 @@ class AdminService {
    */
   async getDashboardStats(params = {}) {
     try {
-      const response = await api.get(`${this.baseEndpoint}/dashboard/stats`, params);
-      return response;
+      const response = await authApi.get(`${this.baseEndpoint}/dashboard/stats`, { params });
+      return response.data;
     } catch (error) {
       console.error('Get dashboard stats error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Register a new user (admin action)
+   * @param {object} userData - { username, email, password, firstName, lastName }
+   * @returns {Promise<object>} Registration response
+   */
+  async registerUser(userData) {
+    try {
+      console.log('[adminService] registerUser: baseURL =', authApi.defaults.baseURL, 'request = /auth/register');
+      // TODO: Implement with RTK Query or a proper API call
+      // const response = await api.post('/auth/register', userData);
+      throw new Error('Register user is not implemented. Use RTK Query for API calls.');
+    } catch (error) {
+      console.error('Admin register user error:', error);
       throw error;
     }
   }
@@ -63,7 +80,8 @@ class AdminService {
    */
   async getUsers(params = {}) {
     try {
-      const response = await this.get('users', params);
+      console.log('[adminService] getUsers: baseURL =', authApi.defaults.baseURL, 'request = /users');
+      const response = await authApi.get('/users', { params });
       return response.data;
     } catch (error) {
       console.error('Get users error:', error);
@@ -78,7 +96,8 @@ class AdminService {
    */
   async getUserById(userId) {
     try {
-      const response = await this.get(`users/${userId}`);
+      console.log('[adminService] getUserById: baseURL =', authApi.defaults.baseURL, `request = /users/${userId}`);
+      const response = await authApi.get(`/users/${userId}`);
       return response.data;
     } catch (error) {
       console.error(`Get user ${userId} error:`, error);
@@ -94,7 +113,8 @@ class AdminService {
    */
   async updateUser(userId, userData) {
     try {
-      const response = await this.put(`users/${userId}`, userData);
+      console.log('[adminService] updateUser: baseURL =', authApi.defaults.baseURL, `request = /users/${userId}`);
+      const response = await authApi.put(`/users/${userId}`, userData);
       return response.data;
     } catch (error) {
       console.error(`Update user ${userId} error:`, error);
@@ -109,7 +129,8 @@ class AdminService {
    */
   async deleteUser(userId) {
     try {
-      const response = await this.delete(`users/${userId}`);
+      console.log('[adminService] deleteUser: baseURL =', authApi.defaults.baseURL, `request = /users/${userId}`);
+      const response = await authApi.delete(`/users/${userId}`);
       return response.data;
     } catch (error) {
       console.error(`Delete user ${userId} error:`, error);

@@ -10,7 +10,7 @@ export const login = createAsyncThunk(
       if (username) payload.username = username;
       if (email) payload.email = email;
       console.log('[authSlice] Sending login payload:', payload);
-      const response = await authApi.post('v1/auth/login', payload);
+      const response = await authApi.post('auth/login', payload);
       console.log('[authSlice] API response:', response);
       // Expect response: { success, message, data }
       if (response.data && response.data.success && response.data.data) {

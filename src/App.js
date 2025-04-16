@@ -2,7 +2,7 @@ import './App.css';
 import ChatPage from './components/chat/ChatPage';
 import { ThemeProvider } from './utils/ThemeContext';
 import { Provider as ReduxProvider } from 'react-redux';
-import { store } from './store';
+import { store } from './app/store';
 import LoginPage from './features/auth/LoginPage';
 
 import {
@@ -17,6 +17,9 @@ import {
 
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
+import React from 'react';
+import NotFound from './components/common/NotFound';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import About from './components/header/About';
 import HomePage from './components/home/HomePage';
 import { AuthProvider } from './utils/AuthContext';
@@ -33,17 +36,18 @@ import AgentsHome from './components/agents/AgentsHome';
 import AgentsClaude from './components/agents/AgentsClaude';
 import AgentsGPT from './components/agents/AgentsGPT';
 import AgentsCustom from './components/agents/AgentsCustom';
-import Minion from './components/agents/Minion';
 
 // Import services pages
 import ServicesHome from './components/services/ServicesHome';
 import ServicesChat from './components/services/ServicesChat';
 import ServicesCode from './components/services/ServicesCode';
 import ServicesImages from './components/services/ServicesImages';
+import KBChatPage from './components/kbchat/KBChatPage';
 
 // Import admin pages
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './components/admin/AdminDashboard';
+import KnowledgeManager from './components/admin/KnowledgeManager';
 import UsersPage from './components/admin/UsersPage';
 import AgentsPage from './components/admin/AgentsPage';
 import ServicesPage from './components/admin/ServicesPage';
@@ -64,14 +68,15 @@ const Layout = () => {
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route>
-            <Route path="/" element={<Layout/>}>
-                <Route index element={<HomePage />} />
-                <Route path="/about" element={<About/>} />
-                <Route path="/chat" element={<ChatPage/>} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/admin/login" element={<LoginPage isAdmin />} />
-                
+        
+        <Route errorElement={<NotFound />}>
+            <Route path="/" element={<Layout/>} errorElement={<NotFound />}>
+                <Route index element={<HomePage />} errorElement={<NotFound />} />
+                <Route path="/about" element={<About/>} errorElement={<NotFound />} />
+                <Route path="/chat" element={<ChatPage/>} errorElement={<NotFound />} />
+                <Route path="/login" element={<LoginPage />} errorElement={<NotFound />} />
+                <Route path="/admin/login" element={<LoginPage isAdmin />} errorElement={<NotFound />} />
+                <Route path="/admin/knowledge" element={<KnowledgeManager />} />
                 {/* Learning routes */}
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/courses" element={<LearningCourses />} />
@@ -84,17 +89,18 @@ const router = createBrowserRouter(
                 <Route path="/agents/claude" element={<AgentsClaude />} />
                 <Route path="/agents/gpt" element={<AgentsGPT />} />
                 <Route path="/agents/custom" element={<AgentsCustom />} />
-                <Route path="/agents/minion" element={<Minion />} />
                 
                 {/* Services routes */}
                 <Route path="/services" element={<ServicesHome />} />
                 <Route path="/services/chat" element={<ServicesChat />} />
+                <Route path="/services/kbchat" element={<KBChatPage />} />
                 <Route path="/services/code" element={<ServicesCode />} />
                 <Route path="/services/images" element={<ServicesImages />} />
                 
                 {/* Admin routes */}
-                <Route path="/admin" element={<AdminLayout />}>
+                <Route path="/admin" element={<AdminLayout />} errorElement={<NotFound />}>
                     <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                    <Route path="knowledge" element={<KnowledgeManager />} />
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="agents" element={<AgentsPage />} />
@@ -114,7 +120,9 @@ function App() {
             <ThemeProvider>
                 <AuthProvider>
                     <div className="font-bodyFont h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-                        <RouterProvider router={router}/>
+                        <ErrorBoundary>
+                            <RouterProvider router={router}/>
+                        </ErrorBoundary>
                     </div>
                 </AuthProvider>
             </ThemeProvider>

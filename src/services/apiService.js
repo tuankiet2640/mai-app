@@ -2,16 +2,27 @@ import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 
 /**
+ * Helper to get JWT from localStorage
+ */
+function getAuthToken() {
+  return localStorage.getItem('accessToken');
+}
+
+/**
  * Base API Service
  * 
  * This service handles API requests with the ability to switch between
- * mock data and production APIs based on configuration.
+ 
  */
 class ApiService {
-  constructor(endpoint) {
+  /**
+   * @param {string} endpoint - base endpoint path for this service (e.g., /users)
+   * @param {string} [baseUrl] - override base URL (for mai-services or rag-service)
+   */
+  constructor(endpoint, baseUrl) {
     this.endpoint = endpoint;
     this.axiosInstance = axios.create({
-      baseURL: apiConfig.getBaseUrl(),
+      baseURL: baseUrl || apiConfig.getAuthBaseUrl(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -20,8 +31,7 @@ class ApiService {
     // Add request interceptor for authentication
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        // Add auth token to headers if available
-        const token = localStorage.getItem('accessToken');
+        const token = getAuthToken();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -34,12 +44,9 @@ class ApiService {
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
-        // Handle 401 Unauthorized errors (token expired)
         if (error.response && error.response.status === 401) {
-          // Attempt to refresh token
           const refreshed = await this.refreshToken();
           if (refreshed) {
-            // Retry the original request
             const originalRequest = error.config;
             return this.axiosInstance(originalRequest);
           }
@@ -47,6 +54,20 @@ class ApiService {
         return Promise.reject(error);
       }
     );
+  }
+
+  /**
+   * Get an ApiService instance for mai-services (auth/user)
+   */
+  static maiServices(endpoint) {
+    return new ApiService(endpoint, apiConfig.getAuthBaseUrl());
+  }
+
+  /**
+   * Get an ApiService instance for rag-service (knowledge base, RAG)
+   */
+  static ragService(endpoint) {
+    return new ApiService(endpoint, apiConfig.getRagBaseUrl());
   }
 
   /**
@@ -58,7 +79,7 @@ class ApiService {
     if (!refreshToken) return false;
 
     try {
-      const response = await axios.post(`${apiConfig.getBaseUrl()}/auth/refresh`, {
+      const response = await axios.post(`${apiConfig.getAuthBaseUrl()}/auth/refresh`, {
         refreshToken,
       });
       
@@ -77,37 +98,6 @@ class ApiService {
   }
 
   /**
-   * Get mock data for the specified endpoint and method
-   * @param {string} method - HTTP method
-   * @param {string} path - API path
-   * @param {object} params - Request parameters
-   * @returns {Promise<any>} Mock data response
-   */
-  async getMockData(method, path, params = {}) {
-    try {
-      // Simulate network delay
-      await apiConfig.simulateDelay();
-
-      // Import the mock data module dynamically
-      const mockPath = `../mock-data/api/${this.endpoint}${path ? `/${path}` : ''}`;
-      const mockModule = await import(`${mockPath}.js`);
-      
-      // Get the appropriate mock data based on the method
-      const mockFunction = mockModule[`mock${method.toUpperCase()}`];
-      
-      if (typeof mockFunction === 'function') {
-        return { data: mockFunction(params) };
-      }
-      
-      // Fallback to the default export if no method-specific mock is found
-      return { data: mockModule.default };
-    } catch (error) {
-      console.error(`Error loading mock data for ${this.endpoint}/${path}:`, error);
-      throw new Error(`No mock data available for ${this.endpoint}/${path}`);
-    }
-  }
-
-  /**
    * Make an API request with automatic switching between mock and production
    * @param {string} method - HTTP method
    * @param {string} path - API path
@@ -117,11 +107,6 @@ class ApiService {
    * @returns {Promise<any>} API response
    */
   async request(method, path = '', data = null, params = {}, options = {}) {
-    // Use mock data if in mock mode
-    if (apiConfig.isMockMode()) {
-      return this.getMockData(method, path, { ...params, ...data });
-    }
-
     // Otherwise, make a real API request
     try {
       const config = {

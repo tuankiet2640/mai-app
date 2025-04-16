@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useLogoutMutation } from '../features/api/authApi';
 
 const AuthContext = createContext(null);
 
@@ -79,21 +80,28 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const logout = () => {
+  const [logoutApi] = useLogoutMutation();
+  const logout = async () => {
+    try {
+      await logoutApi().unwrap();
+    } catch (error) {
+      // Optionally log or handle API error, but still clear tokens
+      console.error('Logout API error:', error);
+    }
     setUser(null);
     tokenUtils.clearTokens();
   };
 
-  const isAuthenticated = () => {
-    return !!user && !!tokenUtils.getAccessToken() && !tokenUtils.isTokenExpired(tokenUtils.getAccessToken());
-  };
 
   const value = {
     user,
     logout,
     loading,
-    isAuthenticated: isAuthenticated(),
-    authInitialized
+    authInitialized,
+    isAuthenticated: () => {
+      const token = tokenUtils.getAccessToken();
+      return !!user && !!token && !tokenUtils.isTokenExpired(token);
+    }
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

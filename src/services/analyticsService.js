@@ -7,17 +7,8 @@
 
 import axios from 'axios';
 
-// Import mock data functions
-import {
-  getSystemMetrics as getMockSystemMetrics,
-  getModelUsage as getMockModelUsage,
-  getKnowledgeBaseUsage as getMockKnowledgeBaseUsage,
-  getUserActivity as getMockUserActivity,
-  getSystemLogs as getMockSystemLogs
-} from '../mock-data/analytics';
-
 // Get environment configuration
-const API_MODE = process.env.REACT_APP_API_MODE || 'mock';
+const API_MODE = process.env.REACT_APP_API_MODE || 'api';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api';
 
 // Create axios instance for API calls
@@ -83,9 +74,7 @@ export const analyticsService = {
    */
   getSystemMetrics: async (params = {}) => {
     // Use mock data if API_MODE is set to 'mock'
-    if (API_MODE === 'mock') {
-      return getMockSystemMetrics(params);
-    }
+
     
     try {
       const response = await apiClient.get('/analytics/system-metrics', { params });
@@ -102,9 +91,7 @@ export const analyticsService = {
    * @returns {Promise<Object>} - Model usage data
    */
   getModelUsage: async (params = {}) => {
-    if (API_MODE === 'mock') {
-      return getMockModelUsage(params);
-    }
+
     
     try {
       const response = await apiClient.get('/analytics/model-usage', { params });
@@ -121,9 +108,7 @@ export const analyticsService = {
    * @returns {Promise<Object>} - Knowledge base usage data
    */
   getKnowledgeBaseUsage: async (params = {}) => {
-    if (API_MODE === 'mock') {
-      return getMockKnowledgeBaseUsage(params);
-    }
+
     
     try {
       const response = await apiClient.get('/analytics/kb-usage', { params });
@@ -140,9 +125,7 @@ export const analyticsService = {
    * @returns {Promise<Object>} - User activity data
    */
   getUserActivity: async (params = {}) => {
-    if (API_MODE === 'mock') {
-      return getMockUserActivity(params);
-    }
+
     
     try {
       const response = await apiClient.get('/analytics/user-activity', { params });
@@ -159,9 +142,7 @@ export const analyticsService = {
    * @returns {Promise<Object>} - System logs with pagination
    */
   getSystemLogs: async (params = {}) => {
-    if (API_MODE === 'mock') {
-      return getMockSystemLogs(params);
-    }
+
     
     try {
       const response = await apiClient.get('/analytics/system-logs', { params });

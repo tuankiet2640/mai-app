@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext';
+import NotAuthorized from '../common/NotAuthorized';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, isAdmin, loading, authInitialized } = useAuth();
+  const { user, logout, loading, authInitialized } = useAuth();
+  // Helper: check if user is admin (role object array)
+  const isAdmin = user?.roles?.some(role => role.name && role.name.toLowerCase() === 'admin');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if the user is an admin whenever auth state changes
@@ -13,10 +16,8 @@ export default function AdminLayout() {
     // Only check after authentication is initialized to avoid flash redirects
     if (authInitialized && !loading) {
       if (!isAdmin) {
-        navigate('/admin/login', { 
-          replace: true,
-          state: { from: location.pathname }
-        });
+        // Render NotAuthorized page for non-admins
+        setSidebarOpen(false);
       }
     }
   }, [authInitialized, loading, isAdmin, navigate, location.pathname]);
@@ -30,9 +31,8 @@ export default function AdminLayout() {
     );
   }
 
-  // This should not be reachable due to the useEffect redirect,
-  // but adding as extra protection
-  if (!isAdmin) return null;
+  // Render NotAuthorized if not admin
+  if (!isAdmin) return <NotAuthorized />;
 
   const handleLogout = () => {
     logout();
@@ -136,6 +136,40 @@ export default function AdminLayout() {
                     />
                   </svg>
                   Users
+                </Link>
+
+                <Link
+                  to="/admin/knowledge"
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    isActivePath('/admin/knowledge')
+                      ? 'bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                  }`}
+                >
+                  <svg
+                    className={`mr-3 h-6 w-6 ${
+                      isActivePath('/admin/knowledge')
+                        ? 'text-rose-500 dark:text-rose-400'
+                        : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300'
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 19.5A2.5 2.5 0 006.5 22h11a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0017.5 2h-11A2.5 2.5 0 004 4.5v15z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 6h8M8 10h8M8 14h6"
+                    />
+                  </svg>
+                  Knowledge Base
                 </Link>
 
                 <Link

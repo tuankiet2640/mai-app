@@ -11,7 +11,7 @@ export const knowledgeApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['KnowledgeBase', 'Document'],
+  tagTypes: ['KnowledgeBase', 'Document'], 
   endpoints: (builder) => ({
     getKnowledgeBases: builder.query({
       query: () => '',
@@ -29,27 +29,38 @@ export const knowledgeApi = createApi({
       query: (kbId) => `${kbId}`,
       providesTags: (result, error, kbId) => [{ type: 'KnowledgeBase', id: kbId }],
     }),
-    ingestDocuments: builder.mutation({
-      query: ({ kbId, formData }) => ({
-        url: `${kbId}/ingest`,
-        method: 'POST',
-        body: formData,
-      }),
-      invalidatesTags: (result, error, { kbId }) => [
-        { type: 'KnowledgeBase', id: kbId },
-        'Document',
-      ],
-    }),
-    addRawTextDocument: builder.mutation({
-      query: ({ kbId, body }) => ({
-        url: `${kbId}/documents`,
-        method: 'POST',
+    updateKnowledgeBase: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `${id}`,
+        method: 'PUT',
         body,
       }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'KnowledgeBase', id }, 'KnowledgeBase'],
+    }),
+    ingestDocument: builder.mutation({
+      query: ({ kbId, documentData }) => ({
+        url: `${kbId}/documents/`, 
+        method: 'PUT',
+        body: documentData,
+      }),
       invalidatesTags: (result, error, { kbId }) => [
         { type: 'KnowledgeBase', id: kbId },
-        'Document',
       ],
+    }),
+    getEmbeddingModels: builder.query({
+      query: () => ({
+        // Correctly fetch from the root path for this specific endpoint
+        // Removed trailing slash
+        url: apiConfig.getRagBaseUrl() + '/embedding_models', 
+      }),
+      // No tags needed for a static list usually
+    }),
+    deleteKnowledgeBase: builder.mutation({
+      query: (kbId) => ({
+        url: `${kbId}`, // Relative to the /knowledge_bases/ base URL
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['KnowledgeBase'], // Refetch the list after deletion
     }),
   }),
 });
@@ -58,6 +69,8 @@ export const {
   useGetKnowledgeBasesQuery,
   useCreateKnowledgeBaseMutation,
   useGetKnowledgeBaseQuery,
-  useIngestDocumentsMutation,
-  useAddRawTextDocumentMutation,
+  useUpdateKnowledgeBaseMutation, 
+  useGetEmbeddingModelsQuery, 
+  useIngestDocumentMutation,
+  useDeleteKnowledgeBaseMutation, // Export new hook
 } = knowledgeApi;

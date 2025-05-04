@@ -93,7 +93,6 @@ The application will be available at `http://localhost:3000`
 
 - ARIA labels for interactive elements
 - Proper heading hierarchy
-- Keyboard navigation support
 - Color contrast compliance
 
 ---
@@ -103,15 +102,8 @@ The application will be available at `http://localhost:3000`
 - All API endpoints and hooks are defined in `/features/api/`
 - Use RTK Query hooks (e.g., `useLoginMutation`, `useGetUsersQuery`, `useChatQuery`)
 - No legacy thunks/services/axios in components or slices
-- See [frontend best practices memory](../README.master.md) for details
 
 ---
-
-## Further Reading
-
-- [../README.master.md](../README.master.md) - System overview and integration
-- [../mai-services/README.md](../mai-services/README.md) - Backend API docs
-- [../rag-service/README.md](../rag-service/README.md) - Knowledge base service docs
 
 ## Available Scripts
 
@@ -119,10 +111,3 @@ The application will be available at `http://localhost:3000`
 - `npm test`: Run tests
 - `npm run build`: Create production build
 
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request

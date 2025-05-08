@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchKnowledgeBases } from '../../features/rag/ragSlice';
+import { useListKnowledgeBasesQuery } from '../../features/api/ragApi';
 
 /**
- * KBDropdown - Reusable dropdown for selecting a Knowledge Base (Redux version)
+ * KBDropdown - Reusable dropdown for selecting a Knowledge Base (RTK Query version)
  *
  * @param {Object} props
  * @param {string} value - currently selected KB id
@@ -13,33 +12,24 @@ import { fetchKnowledgeBases } from '../../features/rag/ragSlice';
  * @param {boolean} autoSelectFirst - if true, auto-select first KB and call onChange
  */
 export default function KBDropdown({ value, onChange, className = '', disabled = false, autoSelectFirst = true }) {
-  const dispatch = useDispatch();
-  const rag = useSelector(state => state.rag);
-  const kbList = rag?.knowledgeBases || [];
-  const loading = rag?.kbStatus === 'loading';
-  const error = rag?.kbError;
-  const ragMissing = !rag;
+  const { 
+    data: kbList = [], 
+    isLoading,
+    isError,
+    error,
+    isFetching 
+  } = useListKnowledgeBasesQuery();
 
-  // Fetch on mount
   useEffect(() => {
-    if (!ragMissing && (!kbList || kbList.length === 0)) {
-      dispatch(fetchKnowledgeBases());
-    }
-    // eslint-disable-next-line
-  }, [ragMissing]);
-
-  // Auto-select first KB if needed
-  useEffect(() => {
-    if (!ragMissing && autoSelectFirst && kbList && kbList.length > 0 && !value) {
+    if (autoSelectFirst && kbList && kbList.length > 0 && !value) {
       onChange && onChange(kbList[0]);
     }
-    // eslint-disable-next-line
-  }, [kbList, autoSelectFirst, ragMissing]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kbList, autoSelectFirst, value, onChange]);
 
-  if (ragMissing) return <span className="text-red-500">Knowledge Base state not found. Redux slice 'rag' missing.</span>;
-  if (loading) return <span>Loading KBs...</span>;
-  if (error) return <span className="text-red-500">{error}</span>;
-  if (!kbList || kbList.length === 0) return <span className="text-red-500">No Knowledge Bases found.</span>;
+  if (isLoading || isFetching) return <span className={`text-gray-500 dark:text-gray-400 ${className}`}>Loading KBs...</span>;
+  if (isError) return <span className={`text-red-500 ${className}`}>Error loading KBs: {error?.data?.message || error?.error || 'Unknown error'}</span>;
+  if (!kbList || kbList.length === 0) return <span className={`text-gray-500 dark:text-gray-400 ${className}`}>No Knowledge Bases found.</span>;
 
   return (
     <select
@@ -48,9 +38,9 @@ export default function KBDropdown({ value, onChange, className = '', disabled =
         const kb = kbList.find(kb => kb.id === e.target.value);
         onChange && onChange(kb);
       }}
-      className={`border rounded px-2 py-1 dark:bg-gray-800 dark:text-white ${className}`}
+      className={`border rounded px-3 py-2 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 ${className}`}
       aria-label="Select Knowledge Base"
-      disabled={disabled}
+      disabled={disabled || isLoading || isFetching}
     >
       {kbList.map(kb => (
         <option key={kb.id} value={kb.id}>{kb.name}</option>
